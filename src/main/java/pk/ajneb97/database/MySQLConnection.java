@@ -92,14 +92,14 @@ public class MySQLConnection {
 
                     boolean firstFind = true;
                     while(result.next()){
-                        UUID uuid = UUID.fromString(result.getString("UUID"));
+                        UUID playerUuid = UUID.fromString(result.getString("UUID"));
                         String playerName = result.getString("PLAYER_NAME");
                         String kitName = result.getString("NAME");
                         long cooldown = result.getLong("COOLDOWN");
                         boolean oneTime = result.getBoolean("ONE_TIME");
                         boolean bought = result.getBoolean("BOUGHT");
                         if(player == null){
-                            player = new PlayerData(uuid,playerName);
+                            player = new PlayerData(playerUuid,playerName);
                         }
                         if(kitName != null){
                             PlayerDataKit playerDataKit = new PlayerDataKit(kitName);
