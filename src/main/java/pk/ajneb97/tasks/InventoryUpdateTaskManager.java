@@ -3,9 +3,9 @@ package pk.ajneb97.tasks;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import pk.ajneb97.PlayerKits2;
 import pk.ajneb97.managers.*;
+import pk.ajneb97.utils.FoliaScheduler;
 import pk.ajneb97.model.inventory.InventoryPlayer;
 import pk.ajneb97.utils.InventoryUtils;
 import pk.ajneb97.utils.ItemUtils;
@@ -15,17 +15,14 @@ import java.util.ArrayList;
 public class InventoryUpdateTaskManager {
 
     private PlayerKits2 plugin;
+    private FoliaScheduler scheduler;
     public InventoryUpdateTaskManager(PlayerKits2 plugin){
         this.plugin = plugin;
+        this.scheduler = new FoliaScheduler(plugin);
     }
 
     public void start(){
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                execute();
-            }
-        }.runTaskTimer(plugin,0L,20L);
+        scheduler.runGlobalRepeating(this::execute,0L,20L);
     }
 
     public void execute(){
