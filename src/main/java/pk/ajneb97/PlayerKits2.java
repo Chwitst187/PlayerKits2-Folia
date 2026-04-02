@@ -46,6 +46,7 @@ public class PlayerKits2 extends JavaPlugin {
     public void onEnable(){
         setVersion();
         setPrefix();
+        warnAboutUnsupportedReloaders();
         registerCommands();
         registerEvents();
 
@@ -86,6 +87,15 @@ public class PlayerKits2 extends JavaPlugin {
 
         updateCheckerManager = new UpdateCheckerManager(version);
         updateMessage(updateCheckerManager.check());
+    }
+
+    private void warnAboutUnsupportedReloaders() {
+        PluginManager pluginManager = getServer().getPluginManager();
+        if(pluginManager.getPlugin("PlugMan") != null || pluginManager.getPlugin("PlugManX") != null){
+            Bukkit.getConsoleSender().sendMessage(MessagesManager.getLegacyColoredMessage(prefix+"&cPlugMan/PlugManX detected."));
+            Bukkit.getConsoleSender().sendMessage(MessagesManager.getLegacyColoredMessage(prefix+"&cLoading or reloading PlayerKits2 with PlugMan is unsupported on Paper/Folia."));
+            Bukkit.getConsoleSender().sendMessage(MessagesManager.getLegacyColoredMessage(prefix+"&eUse a full server restart after replacing the jar to avoid duplicate plugin identifiers."));
+        }
     }
 
     public void onDisable(){
