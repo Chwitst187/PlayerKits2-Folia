@@ -9,17 +9,19 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import pk.ajneb97.PlayerKits2;
 import pk.ajneb97.managers.edit.InventoryEditManager;
 import pk.ajneb97.model.inventory.InventoryPlayer;
+import pk.ajneb97.utils.FoliaScheduler;
 import pk.ajneb97.utils.InventoryUtils;
 
 public class InventoryEditListener implements Listener {
 
     private PlayerKits2 plugin;
+    private final FoliaScheduler scheduler;
     public InventoryEditListener(PlayerKits2 plugin){
         this.plugin = plugin;
+        this.scheduler = new FoliaScheduler(plugin);
     }
     @EventHandler
     public void closeInventory(InventoryCloseEvent event){
@@ -76,12 +78,7 @@ public class InventoryEditListener implements Listener {
         InventoryPlayer inventoryPlayer = invManager.getInventoryPlayer(player);
         if(inventoryPlayer != null) {
             event.setCancelled(true);
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    invManager.writeChat(inventoryPlayer, ChatColor.stripColor(event.getMessage()));
-                }
-            }.runTaskLater(plugin,1L);
+            scheduler.runAtPlayerLater(player, () -> invManager.writeChat(inventoryPlayer, ChatColor.stripColor(event.getMessage())),1L);
         }
     }
 }
