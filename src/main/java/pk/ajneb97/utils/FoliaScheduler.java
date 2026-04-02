@@ -25,7 +25,15 @@ public class FoliaScheduler {
     }
 
     public ScheduledTask runAsyncRepeating(Runnable runnable, long initialDelayTicks, long periodTicks) {
-        return Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> runnable.run(), ticksToMillis(initialDelayTicks), ticksToMillis(periodTicks), TimeUnit.MILLISECONDS);
+        long safeInitialDelayTicks = Math.max(1L, initialDelayTicks);
+        long safePeriodTicks = Math.max(1L, periodTicks);
+        return Bukkit.getAsyncScheduler().runAtFixedRate(
+                plugin,
+                task -> runnable.run(),
+                ticksToMillis(safeInitialDelayTicks),
+                ticksToMillis(safePeriodTicks),
+                TimeUnit.MILLISECONDS
+        );
     }
 
     public ScheduledTask runGlobal(Runnable runnable) {
@@ -37,7 +45,9 @@ public class FoliaScheduler {
     }
 
     public ScheduledTask runGlobalRepeating(Runnable runnable, long initialDelayTicks, long periodTicks) {
-        return Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, task -> runnable.run(), initialDelayTicks, periodTicks);
+        long safeInitialDelayTicks = Math.max(1L, initialDelayTicks);
+        long safePeriodTicks = Math.max(1L, periodTicks);
+        return Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, task -> runnable.run(), safeInitialDelayTicks, safePeriodTicks);
     }
 
     public ScheduledTask runAtLocation(Location location, Runnable runnable) {
